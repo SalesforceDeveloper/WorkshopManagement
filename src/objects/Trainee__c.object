@@ -39,6 +39,15 @@
     <enableHistory>true</enableHistory>
     <enableReports>true</enableReports>
     <fields>
+        <fullName>Attended__c</fullName>
+        <defaultValue>false</defaultValue>
+        <description>This field will be used to verify if any trainee record has attended its parent workshop</description>
+        <externalId>false</externalId>
+        <label>Attended</label>
+        <trackHistory>false</trackHistory>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Trainee_Email__c</fullName>
         <externalId>false</externalId>
         <label>Trainee Email</label>
