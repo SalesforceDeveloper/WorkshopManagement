@@ -24,7 +24,7 @@
         <apex:inputField value="{!traineeInstance.Name}" />
         <label for="text-email">Email</label>
         <apex:inputField value="{!traineeInstance.Trainee_Email__c}" />
-        <button id="save" data-role="button" data-icon="check" data-inline="true" data-theme="b" class="save">Save</button>
+        <button id="save" data-role="button" data-icon="check" data-inline="true" data-theme="b" class="save" onclick="registerTraineeAF();">Save</button>
     </div>
     <apex:actionFunction name="registerTraineeAF" action="{!regiterTrainee}" rerender="messages"/>
     </apex:form>

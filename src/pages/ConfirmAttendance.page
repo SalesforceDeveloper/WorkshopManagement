@@ -1,0 +1,69 @@
+<apex:page showheader="false" controller="ConfirmAttendanceController">
+    <link rel="stylesheet" href="//code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.css" />
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script src="//code.jquery.com/mobile/1.4.3/jquery.mobile-1.4.3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.11.1/jquery.validate.min.js"></script>
+    <script>
+        var $j = jQuery.noConflict();
+        $j(document).ready(function() {
+            getAllWorkshops();
+        });
+
+        function getAllWorkshops() {
+            Visualforce.remoting.Manager.invokeAction(
+                '{!$RemoteAction.ConfirmAttendanceController.getAllWorkshopDetails}',
+                handleWorkshopResult
+            );
+        }
+
+        function handleWorkshopResult(result, event) {
+            if (event.status) {
+                createWorkshopList(result);
+            }
+        }
+
+        function createWorkshopList(result) {
+            $j.each(result, function(index, value) {
+                formSingleWorkshopElement(result[index]);
+            });
+            $j('#workshopListId').listview('refresh');
+        }
+
+        function formSingleWorkshopElement(wsRecord) {
+            var newLi = $j('<li></li>');
+            var newLink = $j('<a id="' + wsRecord.Id + '"><h3>' + wsRecord.Name + '</h3><p>' + wsRecord.Description__c + '</p></a>');
+            newLink.click(function() {
+                Visualforce.remoting.Manager.invokeAction(
+                    '{!$RemoteAction.ConfirmAttendanceController.getAllRelatedTrainees}',
+                    wsRecord.Id,
+                    handleTraineeResult
+                );
+                $j.mobile.changePage('#traineePageId', {changeHash: true});
+            });
+            newLi.append(newLink);
+            newLi.appendTo('#workshopListId');
+        }
+
+        function handleTraineeResult(result, event) {
+            $j.each(result, function(index, value) {
+                formSingleTraineeElement(result[index]);
+            });
+            $j('#traineeListId').listview().listview('refresh');
+        }
+
+        function formSingleTraineeElement(traineeRecord) {
+            var newLi = $j('<li></li>');
+            var newLink = $j('<a id="' + traineeRecord.Id + '"><h3>' + traineeRecord.Name + '</h3><p>' + traineeRecord.Trainee_Email__c + '</p></a>');
+            newLi.append(newLink);
+            newLi.appendTo('#traineeListId');
+        }
+    </script>
+    <div data-role="page" id="workshopPageId">
+        <ul data-role="listview" id="workshopListId">
+        </ul>
+    </div>
+    <div data-role="page" id="traineePageId">
+        <ul data-role="listview" id="traineeListId">
+        </ul>
+    </div>
+</apex:page>
